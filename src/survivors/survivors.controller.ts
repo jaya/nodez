@@ -1,9 +1,13 @@
-import { Controller, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { UpdateSurvivorDto } from './dtos/update-survivor.dto';
+import { SurvivorsService } from './survivors.service';
 
 @Controller('survivors')
 export class SurvivorsController {
+  constructor(private readonly survivorsService: SurvivorsService) {}
+
   @Post()
-  newSurvivor(): any {
+  createSurvivor(): any {
     // A survivor must have a *name*, *age*, *gender* and *last location (latitude, longitude)*.
     // We want this database to be accurate, so add basic validation for each field.
 
@@ -13,11 +17,15 @@ export class SurvivorsController {
     return [{ http_verb: 'POST' }];
   }
 
-  @Patch()
-  updateSurvivor(): any {
-    // A survivor must have the ability to update their last location, storing the new latitude/longitude pair
-    // in the base (no need to track locations, just replacing the previous one is enough).
-    return [{ http_verb: 'PATCH' }];
+  @Patch(':id')
+  updateSurvivor(
+    @Param('id') id: string,
+    @Body() updateSurvivorDto: UpdateSurvivorDto,
+  ) {
+    return this.survivorsService.update({
+      id,
+      ...updateSurvivorDto,
+    });
   }
 
   @Get()
