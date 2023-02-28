@@ -1,6 +1,5 @@
 import { Gender, Survivor } from './survivor.entity';
 
-// Here i'm using an abstract class to be able to inject after
 export interface ISurvivorsRepository {
   findById(id: string): Promise<Survivor | null>;
   update(id: string, data: Partial<Survivor>): Promise<Survivor>;
