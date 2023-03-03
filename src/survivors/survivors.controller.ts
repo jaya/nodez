@@ -17,7 +17,6 @@ import { InternalServerErrorResponseDto } from '../infrastructure/dtos/internal-
 export class SurvivorsController {
   constructor(private survivorsService: SurvivorsService) {}
   @ApiCreatedResponse({ type: Survivor })
-  @ApiInternalServerErrorResponse()
   @ApiHeader({
     name: 'Authorization',
     description: 'Send the survivor id',
