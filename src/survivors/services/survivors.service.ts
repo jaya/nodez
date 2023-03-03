@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSurvivorDto } from '../dto/create-survivor.dto';
 import { Survivor } from '../entities/survivor.entity';
+import { SurvivorGender } from '../survivorGender';
 
 @Injectable()
 export class SurvivorsService {
   private survivors: Survivor[] = [
-    { id: 1, name: 'Joe', age: 50, gender: 'male' },
-    { id: 2, name: 'Ellie', age: 14, gender: 'female' },
+    { id: 1, name: 'Joe', age: 50, gender: SurvivorGender.male },
+    { id: 2, name: 'Ellie', age: 14, gender: SurvivorGender.female },
   ];
 
   createSurvivor(createSurvivorDto: CreateSurvivorDto): Survivor {
