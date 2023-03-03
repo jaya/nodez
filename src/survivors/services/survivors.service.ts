@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSurvivorDto } from './dto/create-survivor.dto';
-import { Survivor } from './entities/survivor.entity';
+import { CreateSurvivorDto } from '../dto/create-survivor.dto';
+import { Survivor } from '../entities/survivor.entity';
 
 @Injectable()
 export class SurvivorsService {

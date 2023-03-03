@@ -1,7 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { CreateSurvivorDto } from './dto/create-survivor.dto';
 import { Survivor } from './entities/survivor.entity';
-import { SurvivorsService } from './survivors.service';
+import { SurvivorsService } from './services/survivors.service';
 
 @Controller('survivors')
 export class SurvivorsController {

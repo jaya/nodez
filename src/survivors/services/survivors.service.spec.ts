@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateSurvivorDto } from './dto/create-survivor.dto';
-import { SurvivorsService } from './Survivors.service';
+import { CreateSurvivorDto } from '../dto/create-survivor.dto';
+import { SurvivorsService } from './survivors.service';
 
 describe('SurvivorsService', () => {
   let service: SurvivorsService;
