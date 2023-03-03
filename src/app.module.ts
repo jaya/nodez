@@ -3,14 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SurvivorsModule } from './survivors/survivors.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import database_config from './databaseconfig';
+import databaseConfig from './databaseConfig';
 import { ItemsModule } from './items/items.module';
 
 @Module({
   controllers: [AppController],
   imports: [
     SurvivorsModule,
-    TypeOrmModule.forRoot(database_config),
+    TypeOrmModule.forRoot(databaseConfig),
     ItemsModule,
   ],
   providers: [AppService],

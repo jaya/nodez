@@ -14,7 +14,7 @@ export class ItemsController {
   @ApiCreatedResponse({ type: Item })
   @ApiInternalServerErrorResponse()
   @Post()
-  createSurvivor(@Body() body: CreateItemDto): any {
+  createItem(@Body() body: CreateItemDto): any {
     return this.itemsService.createItem(body);
   }
 }
