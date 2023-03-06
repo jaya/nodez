@@ -3,11 +3,13 @@ import { ItemsService } from './items.service';
 import {
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { Item } from './entities/item.entity';
 import { CreateItemDto } from './dtos/create-item.dto';
 
 @Controller('items')
+@ApiTags('items')
 export class ItemsController {
   constructor(private itemsService: ItemsService) {}
 

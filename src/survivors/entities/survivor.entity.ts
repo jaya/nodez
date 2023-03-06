@@ -7,10 +7,10 @@ export enum Gender {
   FEMALE = 'FEMALE',
 }
 
-@Entity()
+@Entity('survivors')
 export class Survivor {
   @ApiProperty({ required: true })
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column()
   name: string;

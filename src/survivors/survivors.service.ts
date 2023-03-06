@@ -18,7 +18,7 @@ export class SurvivorsService {
   ) {}
 
   async createSurvivor(body: CreateSurvivorDto): Promise<Survivor> {
-    const newUser = await this.survivorsRepository.create(body);
+    const newUser = this.survivorsRepository.create(body);
     return this.survivorsRepository.save(newUser);
   }
 
