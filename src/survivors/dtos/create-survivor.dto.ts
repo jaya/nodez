@@ -25,6 +25,6 @@ export class CreateSurvivorDto {
   @ApiProperty({ required: true })
   @IsLongitude()
   longitude: number;
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: true, type: CreateInventoryItemDto, isArray: true })
   inventoryItems: CreateInventoryItemDto[];
 }

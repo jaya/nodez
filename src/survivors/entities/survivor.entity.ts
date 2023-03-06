@@ -26,7 +26,7 @@ export class Survivor {
   @ApiProperty({ required: true })
   @Column()
   longitude: number;
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: true, type: InventoryItem, isArray: true })
   @OneToMany(() => InventoryItem, (survivor_item) => survivor_item.owner, {
     cascade: true,
   })

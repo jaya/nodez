@@ -27,19 +27,25 @@ export class SurvivorsService {
     latitude,
     longitude,
   }: UpdateSurvivorParams): Promise<Survivor> {
-    let survivor = await this.survivorsRepository.findById(id);
+    const survivor = await this.survivorsRepository.findOne({
+      where: {
+        id,
+      },
+    });
 
     if (!survivor) {
       throw new NotFoundException('Survivor not found');
     }
 
-    this.survivorsRepository.c
-
-    survivor = await this.survivorsRepository.update(id, {
+    await this.survivorsRepository.update(id, {
       latitude,
       longitude,
     });
 
-    return survivor;
+    return {
+      ...survivor,
+      latitude,
+      longitude,
+    };
   }
 }
