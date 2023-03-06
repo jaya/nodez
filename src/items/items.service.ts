@@ -14,4 +14,12 @@ export class ItemsService {
     const newItem = await this.itemsRepository.create(body);
     return this.itemsRepository.save(newItem);
   }
+
+  async getItems() {
+    return this.itemsRepository.find({
+      order: {
+        points: 'ASC',
+      },
+    });
+  }
 }

@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Survivor } from './survivor.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -27,4 +29,10 @@ export class InventoryItem {
   @ManyToOne(() => Item, (item) => item.inventoryItems)
   @JoinColumn({ referencedColumnName: 'id', name: 'item_id' })
   item: Item;
+  @ApiProperty()
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+  @ApiProperty()
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt?: Date;
 }

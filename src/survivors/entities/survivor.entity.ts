@@ -1,4 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { InventoryItem } from './inventory-item.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -31,4 +38,10 @@ export class Survivor {
     cascade: true,
   })
   inventoryItems: InventoryItem[];
+  @ApiProperty()
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+  @ApiProperty()
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt?: Date;
 }
