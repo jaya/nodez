@@ -1,20 +1,39 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { UpdateSurvivorDto } from './dtos/update-survivor.dto';
+import { CreateSurvivorDto } from './dtos/create-survivor.dto';
 import { SurvivorsService } from './survivors.service';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiHeader,
+  ApiInternalServerErrorResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Survivor } from './entities/survivor.entity';
+import { BadRequestResponseDto } from '../infrastructure/dtos/bad-request-response.dto';
+import { InternalServerErrorResponseDto } from '../infrastructure/dtos/internal-server-error-response.dto';
 
 @Controller('survivors')
+@ApiTags('survivors')
 export class SurvivorsController {
   constructor(private readonly survivorsService: SurvivorsService) {}
 
+  @ApiCreatedResponse({ type: Survivor })
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'Send the survivor id',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+    type: BadRequestResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+    type: InternalServerErrorResponseDto,
+  })
   @Post()
-  createSurvivor(): any {
-    // A survivor must have a *name*, *age*, *gender* and *last location (latitude, longitude)*.
-    // We want this database to be accurate, so add basic validation for each field.
-
-    // Each survivor has their inventory of resources/items.
-    // The survivor must declare all of their resources in the sign-up process.
-    // We will believe they have what they say they have.
-    return [{ http_verb: 'POST' }];
+  createSurvivor(@Body() body: CreateSurvivorDto): any {
+    return this.survivorsService.createSurvivor(body);
   }
 
   @Patch(':id')
