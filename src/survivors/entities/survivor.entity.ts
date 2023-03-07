@@ -39,9 +39,9 @@ export class Survivor {
   })
   inventoryItems: InventoryItem[];
   @ApiProperty()
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn()
   createdAt: Date;
   @ApiProperty()
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn()
   updatedAt?: Date;
 }

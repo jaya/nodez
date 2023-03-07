@@ -19,20 +19,20 @@ export class InventoryItem {
   @ApiProperty({ required: true })
   @Column()
   quantity: number;
-  @Column({ name: 'owner_id' })
+  @Column()
   ownerId: string;
   @ManyToOne(() => Survivor, (survivor) => survivor.inventoryItems)
   @JoinColumn({ referencedColumnName: 'id', name: 'owner_id' })
   owner: Survivor;
-  @Column({ name: 'item_id' })
+  @Column()
   itemId: string;
   @ManyToOne(() => Item, (item) => item.inventoryItems)
   @JoinColumn({ referencedColumnName: 'id', name: 'item_id' })
   item: Item;
   @ApiProperty()
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn()
   createdAt: Date;
   @ApiProperty()
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn()
   updatedAt?: Date;
 }

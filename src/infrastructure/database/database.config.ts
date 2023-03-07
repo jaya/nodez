@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 export const buildDatabaseConfig = (
   configService = new ConfigService(),
@@ -14,6 +15,7 @@ export const buildDatabaseConfig = (
   database: configService.get<string>('DB_NAME'),
   entities: [`dist/**/*.entity{.ts,.js}`],
   migrations: [`dist/infrastructure/database/migrations/*{.js,.ts}`],
+  namingStrategy: new SnakeNamingStrategy(),
 });
 
 export default new DataSource(buildDatabaseConfig());
