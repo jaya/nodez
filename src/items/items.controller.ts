@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { Item } from './entities/item.entity';
 import { CreateItemDto } from './dtos/create-item.dto';
-import { InternalServerErrorResponseDto } from 'src/infrastructure/dtos/internal-server-error-response.dto';
+import { InternalServerErrorResponseDto } from '@/infrastructure/dtos/internal-server-error-response.dto';
 
 @Controller('items')
 @ApiTags('items')

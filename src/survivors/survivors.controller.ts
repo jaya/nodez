@@ -13,7 +13,7 @@ import {
 import { Survivor } from './entities/survivor.entity';
 import { BadRequestResponseDto } from '../infrastructure/dtos/bad-request-response.dto';
 import { InternalServerErrorResponseDto } from '../infrastructure/dtos/internal-server-error-response.dto';
-import { NotFoundResponseDto } from 'src/infrastructure/dtos/not-found-response.dto';
+import { NotFoundResponseDto } from '@/infrastructure/dtos/not-found-response.dto';
 
 @Controller('survivors')
 @ApiTags('survivors')
