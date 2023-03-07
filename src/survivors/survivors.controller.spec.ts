@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Gender } from './entities/survivor.entity';
+import { Gender, Survivor } from './entities/survivor.entity';
 import { SurvivorsController } from './survivors.controller';
 import { SurvivorsService } from './survivors.service';
+import { mock } from 'jest-mock-extended';
 
 describe('SurvivorsController', () => {
   let controller: SurvivorsController;
@@ -10,7 +11,12 @@ describe('SurvivorsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SurvivorsController],
-      providers: [],
+      providers: [
+        {
+          provide: SurvivorsService,
+          useValue: mock<SurvivorsService>(),
+        },
+      ],
     }).compile();
 
     controller = module.get<SurvivorsController>(SurvivorsController);
@@ -18,23 +24,28 @@ describe('SurvivorsController', () => {
   });
 
   it('should be able to update a survivor and return', async () => {
-    // const survivor = {
-    //   id: 'any_id',
-    //   name: 'any_name',
-    //   age: 18,
-    //   gender: Gender.MALE,
-    //   latitude: 1,
-    //   longitude: 1,
-    // };
-    // const body = {
-    //   latitude: 2,
-    //   longitude: 2,
-    // };
-    // jest.spyOn(service, 'update').mockResolvedValue({
-    //   ...survivor,
-    //   ...body,
-    // });
-    // const response = await controller.updateSurvivor('any_id', body);
-    // expect(response).toMatchObject(body);
+    const survivor: Survivor = {
+      id: 'any_id',
+      name: 'any_name',
+      age: 18,
+      gender: Gender.MALE,
+      latitude: 1,
+      longitude: 1,
+      inventoryItems: [],
+      createdAt: new Date(),
+    };
+
+    const body = {
+      latitude: 2,
+      longitude: 2,
+    };
+
+    jest.spyOn(service, 'update').mockResolvedValue({
+      ...survivor,
+      ...body,
+    });
+
+    const response = await controller.updateSurvivor('any_id', body);
+    expect(response).toMatchObject(body);
   });
 });
