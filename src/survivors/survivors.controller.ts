@@ -1,26 +1,26 @@
-import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { UpdateSurvivorDto } from './dtos/update-survivor.dto';
 import { CreateSurvivorDto } from './dtos/create-survivor.dto';
 import { SurvivorsService } from './survivors.service';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
-  ApiHeader,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Survivor } from './entities/survivor.entity';
 import { BadRequestResponseDto } from '../infrastructure/dtos/bad-request-response.dto';
 import { InternalServerErrorResponseDto } from '../infrastructure/dtos/internal-server-error-response.dto';
+import { NotFoundResponseDto } from '@/infrastructure/dtos/not-found-response.dto';
 
 @Controller('survivors')
 @ApiTags('survivors')
 export class SurvivorsController {
-  constructor(private survivorsService: SurvivorsService) {}
+  constructor(private readonly survivorsService: SurvivorsService) {}
+
   @ApiCreatedResponse({ type: Survivor })
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Send the survivor id',
-  })
   @ApiBadRequestResponse({
     description: 'Bad request',
     type: BadRequestResponseDto,
@@ -34,11 +34,28 @@ export class SurvivorsController {
     return this.survivorsService.createSurvivor(body);
   }
 
-  @Patch()
-  updateSurvivor(): any {
-    // A survivor must have the ability to update their last location, storing the new latitude/longitude pair
-    // in the base (no need to track locations, just replacing the previous one is enough).
-    return [{ http_verb: 'PATCH' }];
+  @ApiOkResponse({ type: Survivor })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+    type: BadRequestResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Not Found',
+    type: NotFoundResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+    type: InternalServerErrorResponseDto,
+  })
+  @Patch(':id')
+  updateSurvivor(
+    @Param('id') id: string,
+    @Body() updateSurvivorDto: UpdateSurvivorDto,
+  ) {
+    return this.survivorsService.update({
+      id,
+      ...updateSurvivorDto,
+    });
   }
 
   @Get()

@@ -8,6 +8,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('The Resident Zombie API')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

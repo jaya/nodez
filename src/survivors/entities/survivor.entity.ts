@@ -1,4 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { InventoryItem } from './inventory-item.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -7,10 +14,10 @@ export enum Gender {
   FEMALE = 'FEMALE',
 }
 
-@Entity()
+@Entity('survivors')
 export class Survivor {
   @ApiProperty({ required: true })
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column()
   name: string;
@@ -26,9 +33,15 @@ export class Survivor {
   @ApiProperty({ required: true })
   @Column()
   longitude: number;
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: true, type: InventoryItem, isArray: true })
   @OneToMany(() => InventoryItem, (survivor_item) => survivor_item.owner, {
     cascade: true,
   })
   inventoryItems: InventoryItem[];
+  @ApiProperty()
+  @CreateDateColumn()
+  createdAt: Date;
+  @ApiProperty()
+  @UpdateDateColumn()
+  updatedAt?: Date;
 }
