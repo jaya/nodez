@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSurvivorDto } from './dtos/create-survivor.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Survivor } from './entities/survivor.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, ILike, Repository } from 'typeorm';
 
 export type UpdateSurvivorParams = {
   id: string;
@@ -47,5 +47,28 @@ export class SurvivorsService {
       latitude,
       longitude,
     };
+  }
+
+  async getAll(search?: string): Promise<Survivor[]> {
+    const options: FindManyOptions<Survivor> = {
+      where: {
+        infectedAt: null,
+      },
+      order: {
+        createdAt: 'desc',
+      },
+    };
+
+    if (search) {
+      return this.survivorsRepository.find({
+        ...options,
+        where: {
+          ...options.where,
+          name: ILike(`%${search}%`),
+        },
+      });
+    }
+
+    return this.survivorsRepository.find(options);
   }
 }

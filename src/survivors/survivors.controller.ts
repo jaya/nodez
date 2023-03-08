@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { UpdateSurvivorDto } from './dtos/update-survivor.dto';
 import { CreateSurvivorDto } from './dtos/create-survivor.dto';
 import { SurvivorsService } from './survivors.service';
@@ -59,7 +67,15 @@ export class SurvivorsController {
   }
 
   @Get()
-  getSurvivors(): any {
-    return [{ http_verb: 'GET' }];
+  @ApiOkResponse({
+    type: Survivor,
+    isArray: true,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+    type: InternalServerErrorResponseDto,
+  })
+  getSurvivors(@Query('search') search?: string): Promise<Survivor[]> {
+    return this.survivorsService.getAll(search);
   }
 }
