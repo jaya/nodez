@@ -32,9 +32,7 @@ describe('ItemsController', () => {
         createdAt: new Date(),
       };
 
-      jest
-        .spyOn(itemsService, 'createItem')
-        .mockImplementation(() => Promise.resolve(item));
+      jest.spyOn(itemsService, 'createItem').mockResolvedValueOnce(item);
 
       expect(await controller.createItem(requestBody)).toBe(item);
       expect(itemsService.createItem).toHaveBeenCalledWith(requestBody);

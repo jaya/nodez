@@ -42,9 +42,7 @@ describe('SurvivorsController', () => {
         requestBody,
       });
 
-      jest
-        .spyOn(survivorsService, 'create')
-        .mockImplementation(() => Promise.resolve(survivor));
+      jest.spyOn(survivorsService, 'create').mockResolvedValue(survivor);
 
       expect(
         await survivorsController.createSurvivor(requestBody),
