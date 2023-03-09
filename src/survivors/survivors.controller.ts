@@ -11,8 +11,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Survivor } from './entities/survivor.entity';
-import { BadRequestResponseDto } from '../infrastructure/dtos/bad-request-response.dto';
-import { InternalServerErrorResponseDto } from '../infrastructure/dtos/internal-server-error-response.dto';
+import { BadRequestResponseDto } from '@/infrastructure/dtos/bad-request-response.dto';
+import { InternalServerErrorResponseDto } from '@/infrastructure/dtos/internal-server-error-response.dto';
 import { NotFoundResponseDto } from '@/infrastructure/dtos/not-found-response.dto';
 
 @Controller('survivors')
@@ -31,7 +31,7 @@ export class SurvivorsController {
   })
   @Post()
   createSurvivor(@Body() body: CreateSurvivorDto): any {
-    return this.survivorsService.createSurvivor(body);
+    return this.survivorsService.create(body);
   }
 
   @ApiOkResponse({ type: Survivor })

@@ -5,55 +5,87 @@ import { Repository } from 'typeorm';
 import { Gender, Survivor } from './entities/survivor.entity';
 
 import { SurvivorsService } from './survivors.service';
+import { CreateSurvivorDto } from '@/survivors/dtos/create-survivor.dto';
+import { plainToClass } from 'class-transformer';
 
 describe('SurvivorsService', () => {
-  let service: SurvivorsService;
-  let repository: MockProxy<Repository<Survivor>>;
+  let survivorsService: SurvivorsService;
+  let survivorsRepository: MockProxy<Repository<Survivor>>;
 
   beforeEach(async () => {
-    repository = mock();
+    survivorsRepository = mock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SurvivorsService,
         {
           provide: getRepositoryToken(Survivor),
-          useValue: repository,
+          useValue: survivorsRepository,
         },
       ],
     }).compile();
 
-    service = module.get<SurvivorsService>(SurvivorsService);
+    survivorsService = module.get<SurvivorsService>(SurvivorsService);
   });
 
-  it('should return an Error if survivor does not exists', async () => {
-    await expect(
-      service.update({ id: 'any_id', latitude: 1, longitude: 1 }),
-    ).rejects.toThrow();
+  describe('create', () => {
+    it('should be able to create a survivor and return', async () => {
+      const requestBody: CreateSurvivorDto = {
+        name: 'any_name',
+        age: 18,
+        gender: Gender.MALE,
+        latitude: 1,
+        longitude: 1,
+        inventoryItems: [{ itemId: '1', quantity: 10 }],
+      };
+
+      const survivor: Survivor = plainToClass(Survivor, {
+        id: 'any_id',
+        createdAt: new Date(),
+        requestBody,
+      });
+
+      jest.spyOn(survivorsRepository, 'create').mockReturnValueOnce(survivor);
+      jest.spyOn(survivorsRepository, 'save').mockResolvedValue(survivor);
+
+      expect(await survivorsService.create(requestBody)).toBe<Survivor>(
+        survivor,
+      );
+      expect(survivorsRepository.create).toHaveBeenCalledWith(requestBody);
+      expect(survivorsRepository.save).toHaveBeenCalledWith(survivor);
+    });
   });
 
-  it('should be able to update a survivor and return', async () => {
-    const survivor: Survivor = {
-      id: 'any_id',
-      name: 'any_name',
-      age: 18,
-      gender: Gender.MALE,
-      latitude: 1,
-      longitude: 1,
-      inventoryItems: [],
-      createdAt: new Date(),
-    };
+  describe('update', () => {
+    it('should return an Error if survivor does not exists', async () => {
+      await expect(
+        survivorsService.update({ id: 'any_id', latitude: 1, longitude: 1 }),
+      ).rejects.toThrow();
+    });
 
-    const params = {
-      id: 'any_id',
-      latitude: 2,
-      longitude: 2,
-    };
+    it('should be able to update a survivor and return', async () => {
+      const survivor: Survivor = {
+        id: 'any_id',
+        name: 'any_name',
+        age: 18,
+        gender: Gender.MALE,
+        latitude: 1,
+        longitude: 1,
+        inventoryItems: [],
+        createdAt: new Date(),
+      };
 
-    jest.spyOn(repository, 'findOne').mockResolvedValue(survivor);
+      const params = {
+        id: 'any_id',
+        latitude: 2,
+        longitude: 2,
+      };
 
-    const response = await service.update(params);
+      jest.spyOn(survivorsRepository, 'findOne').mockResolvedValue(survivor);
 
-    expect(response).toMatchObject(params);
+      const response = await survivorsService.update(params);
+
+      expect(response).toMatchObject(params);
+    });
   });
 });

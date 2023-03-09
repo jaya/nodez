@@ -7,7 +7,7 @@ import { plainToClass } from 'class-transformer';
 import { CreateSurvivorDto } from '@/survivors/dtos/create-survivor.dto';
 
 describe('SurvivorsController', () => {
-  let controller: SurvivorsController;
+  let survivorsController: SurvivorsController;
   let survivorsService: SurvivorsService;
 
   beforeEach(async () => {
@@ -21,7 +21,7 @@ describe('SurvivorsController', () => {
       ],
     }).compile();
 
-    controller = module.get<SurvivorsController>(SurvivorsController);
+    survivorsController = module.get<SurvivorsController>(SurvivorsController);
     survivorsService = module.get<SurvivorsService>(SurvivorsService);
   });
 
@@ -43,13 +43,13 @@ describe('SurvivorsController', () => {
       });
 
       jest
-        .spyOn(survivorsService, 'createSurvivor')
+        .spyOn(survivorsService, 'create')
         .mockImplementation(() => Promise.resolve(survivor));
 
-      expect(await controller.createSurvivor(requestBody)).toBe<Survivor>(
-        survivor,
-      );
-      expect(survivorsService.createSurvivor).toHaveBeenCalledWith(requestBody);
+      expect(
+        await survivorsController.createSurvivor(requestBody),
+      ).toBe<Survivor>(survivor);
+      expect(survivorsService.create).toHaveBeenCalledWith(requestBody);
     });
   });
 
@@ -76,7 +76,7 @@ describe('SurvivorsController', () => {
         ...body,
       });
 
-      const response = await controller.updateSurvivor('any_id', body);
+      const response = await survivorsController.updateSurvivor('any_id', body);
       expect(response).toMatchObject(body);
     });
   });
