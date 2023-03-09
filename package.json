@@ -19,7 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "pretypeorm": "npm run build",
-    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "typeorm": "typeorm-ts-node-commonjs",
     "typeorm:run-migrations": "npm run typeorm -- -d ./src/infrastructure/database/database.config.ts migration:run",
     "typeorm:create-migration": "npm run typeorm migration:create ./src/infrastructure/database/migrations/$npm_config_name",
     "typeorm:revert-migration": "npm run typeorm -- -d ./src/infrastructure/database/database.config.ts migration:revert"
@@ -62,7 +62,7 @@
     "supertest": "^6.1.3",
     "ts-jest": "29.0.3",
     "ts-loader": "^9.2.3",
-    "ts-node": "^10.0.0",
+    "ts-node": "^10.9.1",
     "tsconfig-paths": "4.1.1",
     "typescript": "^4.7.4"
   },
