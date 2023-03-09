@@ -5,10 +5,10 @@ import { SurvivorsModule } from '../src/survivors/survivors.module';
 import { ConfigModule } from '@nestjs/config';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { Gender, Survivor } from '@/survivors/entities/survivor.entity';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { Repository } from 'typeorm';
+import { databaseConfig } from './connection';
 import { InventoryItem } from '@/survivors/entities/inventory-item.entity';
 import { Item } from '@/items/entities/item.entity';
-import { Repository } from 'typeorm';
 
 describe('SurvivorsController (e2e)', () => {
   let app: INestApplication;
@@ -21,15 +21,8 @@ describe('SurvivorsController (e2e)', () => {
           envFilePath: '.env.test',
         }),
         TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: process.env.DB_HOST,
-          port: Number(process.env.DB_PORT),
-          username: process.env.DB_USER,
-          password: process.env.DB_PASSWORD,
-          database: process.env.DB_NAME,
-          namingStrategy: new SnakeNamingStrategy(),
+          ...databaseConfig,
           entities: [Survivor, InventoryItem, Item],
-          synchronize: true,
         }),
         SurvivorsModule,
       ],
@@ -41,6 +34,8 @@ describe('SurvivorsController (e2e)', () => {
     repository = moduleFixture.get<Repository<Survivor>>(
       getRepositoryToken(Survivor),
     );
+
+    await repository.delete({});
   });
 
   afterAll(async () => {
@@ -72,6 +67,48 @@ describe('SurvivorsController (e2e)', () => {
 
       expect(response.statusCode).toBe(200);
       expect(response.body).toMatchObject(body);
+    });
+  });
+
+  describe('/GET survivors', () => {
+    it('should be able to get survivors', async () => {
+      const data = {
+        name: 'any_name',
+        age: 18,
+        gender: Gender.MALE,
+        latitude: 1,
+        longitude: 1,
+      };
+
+      const survivor = repository.create(data);
+
+      await repository.save(survivor);
+
+      const response = await request(app.getHttpServer()).get('/survivors');
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toEqual([expect.objectContaining(data)]);
+    });
+
+    it('should be able to get survivors filter by name', async () => {
+      const data = {
+        name: 'any_name',
+        age: 18,
+        gender: Gender.MALE,
+        latitude: 1,
+        longitude: 1,
+      };
+
+      const survivor = repository.create(data);
+
+      await repository.save(survivor);
+
+      const response = await request(app.getHttpServer())
+        .get('/survivors')
+        .query({ search: 'any_name' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toEqual([expect.objectContaining(data)]);
     });
   });
 });

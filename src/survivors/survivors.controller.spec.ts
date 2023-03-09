@@ -23,29 +23,52 @@ describe('SurvivorsController', () => {
     service = module.get<SurvivorsService>(SurvivorsService);
   });
 
-  it('should be able to update a survivor and return', async () => {
-    const survivor: Survivor = {
-      id: 'any_id',
-      name: 'any_name',
-      age: 18,
-      gender: Gender.MALE,
-      latitude: 1,
-      longitude: 1,
-      inventoryItems: [],
-      createdAt: new Date(),
-    };
+  describe('updateSurvivor', () => {
+    it('should be able to update a survivor and return', async () => {
+      const survivor: Survivor = {
+        id: 'any_id',
+        name: 'any_name',
+        age: 18,
+        gender: Gender.MALE,
+        latitude: 1,
+        longitude: 1,
+        inventoryItems: [],
+        createdAt: new Date(),
+      };
 
-    const body = {
-      latitude: 2,
-      longitude: 2,
-    };
+      const body = {
+        latitude: 2,
+        longitude: 2,
+      };
 
-    jest.spyOn(service, 'update').mockResolvedValue({
-      ...survivor,
-      ...body,
+      jest.spyOn(service, 'update').mockResolvedValue({
+        ...survivor,
+        ...body,
+      });
+
+      const response = await controller.updateSurvivor('any_id', body);
+      expect(response).toMatchObject(body);
     });
+  });
 
-    const response = await controller.updateSurvivor('any_id', body);
-    expect(response).toMatchObject(body);
+  describe('getSurvivors', () => {
+    it('should be able to get survivors and return', async () => {
+      const survivor: Survivor = {
+        id: 'any_id',
+        name: 'any_name',
+        age: 18,
+        gender: Gender.MALE,
+        latitude: 1,
+        longitude: 1,
+        inventoryItems: [],
+        createdAt: new Date(),
+      };
+
+      jest.spyOn(service, 'getAll').mockResolvedValue([survivor]);
+
+      const response = await controller.getSurvivors();
+
+      expect(response).toEqual([survivor]);
+    });
   });
 });

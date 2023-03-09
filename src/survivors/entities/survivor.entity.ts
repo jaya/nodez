@@ -39,6 +39,9 @@ export class Survivor {
   })
   inventoryItems: InventoryItem[];
   @ApiProperty()
+  @Column()
+  infectedAt?: Date | null;
+  @ApiProperty()
   @CreateDateColumn()
   createdAt: Date;
   @ApiProperty()
