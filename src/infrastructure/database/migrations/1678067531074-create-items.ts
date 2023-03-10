@@ -37,9 +37,9 @@ export class CreateItems1678067531074 implements MigrationInterface {
       }),
     );
 
-    queryRunner.manager
-      .query(`INSERT INTO public.items (id, "name", points) VALUES('9382f552-78d1-4dad-9f27-272166300e37', 'Fiji Water ', 14);
-    INSERT INTO public.items (id, "name", points) VALUES('1b54777f-d207-4d5d-82ef-2751c89feef7', 'Campbell Soup ', 12);
+    await queryRunner.manager
+      .query(`INSERT INTO public.items (id, "name", points) VALUES('9382f552-78d1-4dad-9f27-272166300e37', 'Fiji Water', 14);
+    INSERT INTO public.items (id, "name", points) VALUES('1b54777f-d207-4d5d-82ef-2751c89feef7', 'Campbell Soup', 12);
     INSERT INTO public.items (id, "name", points) VALUES('8b561ae9-e79e-4846-a736-cf592b6453d7', 'First Aid Pouch', 10);
     INSERT INTO public.items (id, "name", points) VALUES('c2704891-aaac-43eb-b970-bb71675ec2ab', 'AK47 ', 8);
     `);

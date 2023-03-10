@@ -17,7 +17,7 @@ export class SurvivorsService {
     private readonly survivorsRepository: Repository<Survivor>,
   ) {}
 
-  async createSurvivor(body: CreateSurvivorDto): Promise<Survivor> {
+  async create(body: CreateSurvivorDto): Promise<Survivor> {
     const newUser = this.survivorsRepository.create(body);
     return this.survivorsRepository.save(newUser);
   }
