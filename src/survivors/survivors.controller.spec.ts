@@ -78,4 +78,25 @@ describe('SurvivorsController', () => {
       expect(response).toMatchObject(body);
     });
   });
+
+  describe('getSurvivors', () => {
+    it('should be able to get survivors and return', async () => {
+      const survivor: Survivor = {
+        id: 'any_id',
+        name: 'any_name',
+        age: 18,
+        gender: Gender.MALE,
+        latitude: 1,
+        longitude: 1,
+        inventoryItems: [],
+        createdAt: new Date(),
+      };
+
+      jest.spyOn(survivorsService, 'getAll').mockResolvedValue([survivor]);
+
+      const response = await survivorsController.getSurvivors();
+
+      expect(response).toEqual([survivor]);
+    });
+  });
 });

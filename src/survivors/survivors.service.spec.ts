@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { mock, MockProxy } from 'jest-mock-extended';
-import { Repository } from 'typeorm';
+import { FindOperator, Repository } from 'typeorm';
 import { Gender, Survivor } from './entities/survivor.entity';
 
 import { SurvivorsService } from './survivors.service';
@@ -86,6 +86,69 @@ describe('SurvivorsService', () => {
       const response = await survivorsService.update(params);
 
       expect(response).toMatchObject(params);
+    });
+  });
+
+  describe('getAll', () => {
+    it('should be able to get survivors', async () => {
+      const survivors: Survivor[] = [
+        {
+          id: 'any_id',
+          age: 18,
+          name: 'any_name',
+          createdAt: new Date(),
+          gender: Gender.MALE,
+          latitude: 1,
+          longitude: 1,
+          inventoryItems: [],
+        },
+      ];
+
+      survivorsRepository.find.mockResolvedValueOnce(survivors);
+
+      const response = await survivorsService.getAll();
+
+      expect(survivorsRepository.find).toHaveBeenCalledTimes(1);
+      expect(survivorsRepository.find).toHaveBeenCalledWith({
+        where: {
+          infectedAt: null,
+        },
+        order: {
+          createdAt: 'desc',
+        },
+      });
+      expect(response).toBe(survivors);
+    });
+
+    it('should be able to get survivors filter by name', async () => {
+      const survivors: Survivor[] = [
+        {
+          id: 'any_id',
+          age: 18,
+          name: 'any_name',
+          createdAt: new Date(),
+          gender: Gender.MALE,
+          latitude: 1,
+          longitude: 1,
+          inventoryItems: [],
+        },
+      ];
+
+      survivorsRepository.find.mockResolvedValueOnce(survivors);
+
+      const response = await survivorsService.getAll('any_name');
+
+      expect(survivorsRepository.find).toHaveBeenCalledTimes(1);
+      expect(survivorsRepository.find).toHaveBeenCalledWith({
+        where: {
+          infectedAt: null,
+          name: expect.any(FindOperator),
+        },
+        order: {
+          createdAt: 'desc',
+        },
+      });
+      expect(response).toBe(survivors);
     });
   });
 });

@@ -5,7 +5,7 @@ import { SurvivorsModule } from '@/survivors/survivors.module';
 import { ConfigModule } from '@nestjs/config';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { Gender, Survivor } from '@/survivors/entities/survivor.entity';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { databaseConfig } from './connection';
 import { InventoryItem } from '@/survivors/entities/inventory-item.entity';
 import { Item } from '@/items/entities/item.entity';
 import { Repository } from 'typeorm';
@@ -23,15 +23,8 @@ describe('SurvivorsController (e2e)', () => {
           envFilePath: '.env.test',
         }),
         TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: process.env.DB_HOST,
-          port: Number(process.env.DB_PORT),
-          username: process.env.DB_USER,
-          password: process.env.DB_PASSWORD,
-          database: process.env.DB_NAME,
-          namingStrategy: new SnakeNamingStrategy(),
+          ...databaseConfig,
           entities: [Survivor, InventoryItem, Item],
-          synchronize: true,
         }),
         SurvivorsModule,
         ItemsModule,
@@ -48,6 +41,18 @@ describe('SurvivorsController (e2e)', () => {
     itemsRepository = moduleFixture.get<Repository<Item>>(
       getRepositoryToken(Item),
     );
+
+    const inventoryItemsRepository = moduleFixture.get<
+      Repository<InventoryItem>
+    >(getRepositoryToken(InventoryItem));
+
+    await inventoryItemsRepository.delete({});
+    await itemsRepository.delete({});
+    await survivorsRepository.delete({});
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe('POST /survivors', () => {
@@ -99,7 +104,45 @@ describe('SurvivorsController (e2e)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  describe('/GET survivors', () => {
+    it('should be able to get survivors', async () => {
+      const data = {
+        name: 'any_name',
+        age: 18,
+        gender: Gender.MALE,
+        latitude: 1,
+        longitude: 1,
+      };
+
+      const survivor = survivorsRepository.create(data);
+
+      await survivorsRepository.save(survivor);
+
+      const response = await request(app.getHttpServer()).get('/survivors');
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toEqual([expect.objectContaining(data)]);
+    });
+
+    it('should be able to get survivors filter by name', async () => {
+      const data = {
+        name: 'any_name',
+        age: 18,
+        gender: Gender.MALE,
+        latitude: 1,
+        longitude: 1,
+      };
+
+      const survivor = survivorsRepository.create(data);
+
+      await survivorsRepository.save(survivor);
+
+      const response = await request(app.getHttpServer())
+        .get('/survivors')
+        .query({ search: 'any_name' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toEqual([expect.objectContaining(data)]);
+    });
   });
 });
