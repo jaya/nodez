@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsLatitude, IsLongitude, IsNotEmpty, IsNumber } from 'class-validator';
 
-export class UpdateSurvivorDto {
+export class UpdateSurvivorDtoRequest {
   @ApiProperty({ required: true })
   @IsLatitude()
   @IsNumber()

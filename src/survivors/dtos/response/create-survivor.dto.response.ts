@@ -1,4 +1,3 @@
-import { CreateInventoryItemDto } from './create-inventory-item-dto';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEnum,
@@ -6,12 +5,29 @@ import {
   IsLatitude,
   IsLongitude,
   IsNotEmpty,
+  IsNumber,
   Max,
   Min,
 } from 'class-validator';
-import { Gender } from '../entities/survivor.entity';
+import { Gender } from '../../entities/survivor.entity';
 
-export class CreateSurvivorDto {
+export class CreateInventoryItemDtoResponse {
+  @ApiProperty({ required: true })
+  @IsNotEmpty()
+  id: string;
+
+  @ApiProperty({ required: true })
+  @IsNotEmpty()
+  itemId: string;
+
+  @ApiProperty({ required: true })
+  @IsNotEmpty()
+  @Min(1)
+  @IsNumber()
+  quantity: number;
+}
+
+export class CreateSurvivorDtoResponse {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   name: string;
@@ -36,6 +52,10 @@ export class CreateSurvivorDto {
   @IsLongitude()
   longitude: number;
 
-  @ApiProperty({ required: true, type: CreateInventoryItemDto, isArray: true })
-  inventoryItems: CreateInventoryItemDto[];
+  @ApiProperty({
+    required: true,
+    type: CreateInventoryItemDtoResponse,
+    isArray: true,
+  })
+  inventoryItems: CreateInventoryItemDtoResponse[];
 }

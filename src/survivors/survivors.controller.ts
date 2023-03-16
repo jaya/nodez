@@ -7,8 +7,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UpdateSurvivorDto } from './dtos/update-survivor.dto';
-import { CreateSurvivorDto } from './dtos/create-survivor.dto';
+import { UpdateSurvivorDtoRequest } from './dtos/request/update-survivor.dto.request';
+import { CreateSurvivorDtoRequest } from './dtos/request/create-survivor.dto.request';
 import { SurvivorsService } from './survivors.service';
 import {
   ApiBadRequestResponse,
@@ -19,9 +19,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Survivor } from './entities/survivor.entity';
-import { BadRequestResponseDto } from '../infrastructure/dtos/bad-request-response.dto';
-import { InternalServerErrorResponseDto } from '../infrastructure/dtos/internal-server-error-response.dto';
+import { BadRequestResponseDto } from '@/infrastructure/dtos/bad-request-response.dto';
+import { InternalServerErrorResponseDto } from '@/infrastructure/dtos/internal-server-error-response.dto';
 import { NotFoundResponseDto } from '@/infrastructure/dtos/not-found-response.dto';
+import { CreateSurvivorDtoResponse } from '@/survivors/dtos/response/create-survivor.dto.response';
 
 @Controller('survivors')
 @ApiTags('survivors')
@@ -38,7 +39,9 @@ export class SurvivorsController {
     type: InternalServerErrorResponseDto,
   })
   @Post()
-  createSurvivor(@Body() body: CreateSurvivorDto): any {
+  createSurvivor(
+    @Body() body: CreateSurvivorDtoRequest,
+  ): Promise<CreateSurvivorDtoResponse> {
     return this.survivorsService.createSurvivor(body);
   }
 
@@ -58,7 +61,7 @@ export class SurvivorsController {
   @Patch(':id')
   updateSurvivor(
     @Param('id') id: string,
-    @Body() updateSurvivorDto: UpdateSurvivorDto,
+    @Body() updateSurvivorDto: UpdateSurvivorDtoRequest,
   ) {
     return this.survivorsService.update({
       id,

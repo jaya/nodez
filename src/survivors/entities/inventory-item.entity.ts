@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Survivor } from './survivor.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Item } from '../../items/entities/item.entity';
+import { Item } from '@/items/entities/item.entity';
 
 @Entity('inventory_items')
 export class InventoryItem {
@@ -19,20 +19,16 @@ export class InventoryItem {
   @ApiProperty({ required: true })
   @Column()
   quantity: number;
-  @Column()
-  ownerId: string;
   @ManyToOne(() => Survivor, (survivor) => survivor.inventoryItems)
   @JoinColumn({ referencedColumnName: 'id', name: 'owner_id' })
   owner: Survivor;
-  @Column()
-  itemId: string;
   @ManyToOne(() => Item, (item) => item.inventoryItems)
   @JoinColumn({ referencedColumnName: 'id', name: 'item_id' })
   item: Item;
-  @ApiProperty()
+  @ApiProperty({ required: true })
   @CreateDateColumn()
   createdAt: Date;
-  @ApiProperty()
+  @ApiProperty({ required: true })
   @UpdateDateColumn()
   updatedAt?: Date;
 }

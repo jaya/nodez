@@ -4,6 +4,7 @@ import { SurvivorsModule } from './survivors/survivors.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ItemsModule } from './items/items.module';
 import { buildDatabaseConfig } from './infrastructure/database/database.config';
+import { DashboardsModule } from './dashboards/dashboards.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { buildDatabaseConfig } from './infrastructure/database/database.config';
     }),
     SurvivorsModule,
     ItemsModule,
+    DashboardsModule,
   ],
 })
 export class AppModule {}

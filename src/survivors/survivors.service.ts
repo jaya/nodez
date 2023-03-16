@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateSurvivorDto } from './dtos/create-survivor.dto';
+import { CreateSurvivorDtoRequest } from './dtos/request/create-survivor.dto.request';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Survivor } from './entities/survivor.entity';
 import { FindManyOptions, ILike, Repository } from 'typeorm';
@@ -17,7 +17,7 @@ export class SurvivorsService {
     private readonly survivorsRepository: Repository<Survivor>,
   ) {}
 
-  async createSurvivor(body: CreateSurvivorDto): Promise<Survivor> {
+  async createSurvivor(body: CreateSurvivorDtoRequest): Promise<Survivor> {
     const newUser = this.survivorsRepository.create(body);
     return this.survivorsRepository.save(newUser);
   }

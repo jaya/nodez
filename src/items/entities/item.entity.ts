@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { InventoryItem } from '../../survivors/entities/inventory-item.entity';
+import { InventoryItem } from '@/survivors/entities/inventory-item.entity';
 
 @Entity('items')
 export class Item {
@@ -23,9 +23,9 @@ export class Item {
   @OneToMany(() => InventoryItem, (inventoryItem) => inventoryItem.item)
   inventoryItems?: InventoryItem[];
   @ApiProperty()
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn()
   createdAt: Date;
   @ApiProperty()
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn()
   updatedAt?: Date;
 }

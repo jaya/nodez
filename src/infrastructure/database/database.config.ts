@@ -18,4 +18,6 @@ export const buildDatabaseConfig = (
   namingStrategy: new SnakeNamingStrategy(),
 });
 
-export default new DataSource(buildDatabaseConfig());
+const AppDataSource = new DataSource(buildDatabaseConfig());
+
+export default AppDataSource;
