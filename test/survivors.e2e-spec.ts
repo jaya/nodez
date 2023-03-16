@@ -68,7 +68,7 @@ describe('SurvivorsController (e2e)', () => {
         gender: Gender.MALE,
         latitude: 1,
         longitude: 1,
-        inventoryItems: [{ itemId: item.id, quantity: 10 }],
+        inventoryItems: [{ item: { id: item.id }, quantity: 10 }],
       };
 
       const response = await request(app.getHttpServer())

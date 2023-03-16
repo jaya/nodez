@@ -5,8 +5,9 @@ import { FindOperator, Repository } from 'typeorm';
 import { Gender, Survivor } from './entities/survivor.entity';
 
 import { SurvivorsService } from './survivors.service';
-import { CreateSurvivorDto } from '@/survivors/dtos/create-survivor.dto';
 import { plainToClass } from 'class-transformer';
+import { CreateSurvivorDtoRequest } from '@/survivors/dtos/request/create-survivor.dto.request';
+import { CreateSurvivorDtoResponse } from '@/survivors/dtos/response/create-survivor.dto.response';
 
 describe('SurvivorsService', () => {
   let survivorsService: SurvivorsService;
@@ -30,27 +31,34 @@ describe('SurvivorsService', () => {
 
   describe('create', () => {
     it('should be able to create a survivor and return', async () => {
-      const requestBody: CreateSurvivorDto = {
+      const requestBody: CreateSurvivorDtoRequest = {
         name: 'any_name',
         age: 18,
         gender: Gender.MALE,
         latitude: 1,
         longitude: 1,
-        inventoryItems: [{ itemId: '1', quantity: 10 }],
+        inventoryItems: [{ item: { id: '1' }, quantity: 10 }],
       };
 
-      const survivor: Survivor = plainToClass(Survivor, {
+      const rawBody = {
         id: 'any_id',
         createdAt: new Date(),
         requestBody,
-      });
+      };
+
+      const survivor: Survivor = plainToClass(Survivor, rawBody);
+
+      const responseBody: CreateSurvivorDtoResponse = plainToClass(
+        CreateSurvivorDtoResponse,
+        rawBody,
+      );
 
       jest.spyOn(survivorsRepository, 'create').mockReturnValueOnce(survivor);
       jest.spyOn(survivorsRepository, 'save').mockResolvedValue(survivor);
 
-      expect(await survivorsService.create(requestBody)).toBe<Survivor>(
-        survivor,
-      );
+      expect(
+        await survivorsService.create(requestBody),
+      ).toStrictEqual<CreateSurvivorDtoResponse>(responseBody);
       expect(survivorsRepository.create).toHaveBeenCalledWith(requestBody);
       expect(survivorsRepository.save).toHaveBeenCalledWith(survivor);
     });

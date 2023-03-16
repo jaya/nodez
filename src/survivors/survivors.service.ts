@@ -3,6 +3,8 @@ import { CreateSurvivorDtoRequest } from './dtos/request/create-survivor.dto.req
 import { InjectRepository } from '@nestjs/typeorm';
 import { Survivor } from './entities/survivor.entity';
 import { FindManyOptions, ILike, Repository } from 'typeorm';
+import { CreateSurvivorDtoResponse } from '@/survivors/dtos/response/create-survivor.dto.response';
+import { plainToClass } from 'class-transformer';
 
 export type UpdateSurvivorParams = {
   id: string;
@@ -17,9 +19,15 @@ export class SurvivorsService {
     private readonly survivorsRepository: Repository<Survivor>,
   ) {}
 
-  async createSurvivor(body: CreateSurvivorDtoRequest): Promise<Survivor> {
+  async create(
+    body: CreateSurvivorDtoRequest,
+  ): Promise<CreateSurvivorDtoResponse> {
     const newUser = this.survivorsRepository.create(body);
-    return this.survivorsRepository.save(newUser);
+
+    return plainToClass(
+      CreateSurvivorDtoResponse,
+      this.survivorsRepository.save(newUser),
+    );
   }
 
   async update({

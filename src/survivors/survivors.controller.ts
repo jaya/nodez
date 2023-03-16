@@ -42,7 +42,7 @@ export class SurvivorsController {
   createSurvivor(
     @Body() body: CreateSurvivorDtoRequest,
   ): Promise<CreateSurvivorDtoResponse> {
-    return this.survivorsService.createSurvivor(body);
+    return this.survivorsService.create(body);
   }
 
   @ApiOkResponse({ type: Survivor })

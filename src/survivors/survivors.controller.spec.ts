@@ -4,7 +4,8 @@ import { SurvivorsController } from './survivors.controller';
 import { SurvivorsService } from './survivors.service';
 import { mock } from 'jest-mock-extended';
 import { plainToClass } from 'class-transformer';
-import { CreateSurvivorDto } from '@/survivors/dtos/create-survivor.dto';
+import { CreateSurvivorDtoRequest } from '@/survivors/dtos/request/create-survivor.dto.request';
+import { CreateSurvivorDtoResponse } from '@/survivors/dtos/response/create-survivor.dto.response';
 
 describe('SurvivorsController', () => {
   let survivorsController: SurvivorsController;
@@ -25,33 +26,33 @@ describe('SurvivorsController', () => {
     survivorsService = module.get<SurvivorsService>(SurvivorsService);
   });
 
-  describe('createItem', () => {
+  describe('create', () => {
     it('should be able to create a survivor and return', async () => {
-      const requestBody: CreateSurvivorDto = {
+      const requestBody: CreateSurvivorDtoRequest = {
         name: 'any_name',
         age: 18,
         gender: Gender.MALE,
         latitude: 1,
         longitude: 1,
-        inventoryItems: [{ itemId: '1', quantity: 10 }],
+        inventoryItems: [{ item: { id: '1' }, quantity: 10 }],
       };
 
-      const survivor = plainToClass(Survivor, {
+      const responseBody = plainToClass(CreateSurvivorDtoResponse, {
         id: 'any_id',
         createdAt: new Date(),
         requestBody,
       });
 
-      jest.spyOn(survivorsService, 'create').mockResolvedValue(survivor);
+      jest.spyOn(survivorsService, 'create').mockResolvedValue(responseBody);
 
       expect(
         await survivorsController.createSurvivor(requestBody),
-      ).toBe<Survivor>(survivor);
+      ).toBe<CreateSurvivorDtoResponse>(responseBody);
       expect(survivorsService.create).toHaveBeenCalledWith(requestBody);
     });
   });
 
-  describe('updateSurvivor', () => {
+  describe('update', () => {
     it('should be able to update a survivor and return', async () => {
       const survivor: Survivor = {
         id: 'any_id',
