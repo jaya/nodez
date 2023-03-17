@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEnum,
   IsInt,
   IsLatitude,
   IsLongitude,
@@ -9,7 +8,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { Gender } from '../../entities/survivor.entity';
+import { Survivor } from '../../entities/survivor.entity';
 
 export class CreateInventoryItemDtoResponse {
   @ApiProperty({ required: true })
@@ -30,6 +29,10 @@ export class CreateInventoryItemDtoResponse {
 export class CreateSurvivorDtoResponse {
   @ApiProperty({ required: true })
   @IsNotEmpty()
+  id: string;
+
+  @ApiProperty({ required: true })
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty({ required: true })
@@ -41,8 +44,7 @@ export class CreateSurvivorDtoResponse {
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  @IsEnum(Gender)
-  gender: Gender;
+  gender: string;
 
   @ApiProperty({ required: true })
   @IsLatitude()
@@ -57,5 +59,26 @@ export class CreateSurvivorDtoResponse {
     type: CreateInventoryItemDtoResponse,
     isArray: true,
   })
-  inventoryItems: CreateInventoryItemDtoResponse[];
+  inventoryItems: CreateInventoryItemDtoResponse[] = [];
+
+  static fromEntity(survivor: Survivor): CreateSurvivorDtoResponse {
+    const dto = new CreateSurvivorDtoResponse();
+
+    dto.id = survivor.id;
+    dto.name = survivor.name;
+    dto.age = survivor.age;
+    dto.gender = survivor.gender;
+    dto.latitude = survivor.latitude;
+    dto.longitude = survivor.longitude;
+
+    survivor.inventoryItems.forEach(function (inventoryItem) {
+      const inventoryItemDto = new CreateInventoryItemDtoResponse();
+      inventoryItemDto.id = inventoryItem.id;
+      inventoryItemDto.itemId = inventoryItem.item.id;
+      inventoryItemDto.quantity = inventoryItem.quantity;
+      dto.inventoryItems.push(inventoryItemDto);
+    });
+
+    return dto;
+  }
 }

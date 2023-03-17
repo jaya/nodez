@@ -29,7 +29,7 @@ import { CreateSurvivorDtoResponse } from '@/survivors/dtos/response/create-surv
 export class SurvivorsController {
   constructor(private readonly survivorsService: SurvivorsService) {}
 
-  @ApiCreatedResponse({ type: Survivor })
+  @ApiCreatedResponse({ type: CreateSurvivorDtoResponse })
   @ApiBadRequestResponse({
     description: 'Bad request',
     type: BadRequestResponseDto,
